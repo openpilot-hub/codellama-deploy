@@ -80,3 +80,34 @@ INFO:     Waiting for application startup.
 INFO:     Application startup complete.
 INFO:     Uvicorn running on http://0.0.0.0:8080 (Press CTRL+C to quit)
 ```
+
+发送测试请求
+
+```
+curl -X POST --header 'Content-Type: application/json' http://localhost:8080/v1/chat/completions --data '{"messages":[{"role":"user", "content":"def sort(d):"}]}'
+{
+    "id": "chatcmpl-01e291d2-1166-4dc4-848d-3243ee999261",
+    "object": "chat.completion",
+    "created": 1700743684,
+    "model": "/mnt/data/codefuse-codellama-34b.Q4_K_M.gguf",
+    "choices": [
+        {
+            "index": 0,
+            "message": {
+                "content": "\n    k = list(d.keys())\n    v = list(d.values())\n    for i in range(len(k)):\n        for j in range(i+1, len(k)):\n            if v[i] < v[j]:\n                v[i], v[j] = v[j], v[i] # swap\n                k[i], k[j] = k[j], k[i]\n    return dict(zip(k, v)) \n    \nd = {'apple': 10, 'banana': 20, 'orange': 5, 'pear': 15}\nprint(sort(d))",
+                "role": "assistant"
+            },
+            "finish_reason": "stop"
+        }
+    ],
+    "usage": {
+        "prompt_tokens": 16,
+        "completion_tokens": 152,
+        "total_tokens": 168
+    }
+}
+```
+
+将响应参数中的 `content` 字段值取出来，用 `python` 执行，输出结果如下：
+
+![SCR-20231123-shyp.png](./resources/SCR-20231123-shyp.png)
